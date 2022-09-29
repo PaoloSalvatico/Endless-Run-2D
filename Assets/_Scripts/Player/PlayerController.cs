@@ -7,8 +7,18 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [Header("Move Stats")]
-    [SerializeField] protected float _moveMultiplier = 1.5f;
-    [SerializeField] protected float _jumpMultiplier = 5f;
+    [SerializeField] protected float _moveHorizontalMultiplier = 1.5f;
+    [SerializeField] protected float _moveVerticalMultiplier = 1.5f;
+
+    [Header("Player Sprites")]
+    [SerializeField] private Sprite _idleSprite;
+    [SerializeField] private Sprite _hittedSprite;
+    [SerializeField] private Sprite _attackSprite;
+
+    [Header("Bullet Stats")]
+    [SerializeField] private BulletController _bullet;
+    [SerializeField] private Transform _bulletSpawnPoint;
+    [SerializeField] private float _bulletSpawnDelay;
 
     protected MoveCommand _moveLeft;
     protected MoveCommand _moveRight;
@@ -16,8 +26,10 @@ public class PlayerController : MonoBehaviour
     protected MoveCommand _moveDown;
 
     protected Rigidbody2D _rigidbody;
-    protected SpriteRenderer _spriteRenderer;
+    private SpriteRenderer _spriteRenderer;
     protected Animator _animator;
+
+    protected bool _canShoot;
 
     float _inputX = 0;
     float _inputY = 0;
@@ -26,30 +38,39 @@ public class PlayerController : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        _canShoot = true;
 
-        _moveLeft = new MoveCommand(_rigidbody, MoveDirection.Left, _moveMultiplier);
-        _moveRight = new MoveCommand(_rigidbody, MoveDirection.Right, _moveMultiplier);
-        _moveUp = new MoveCommand(_rigidbody, MoveDirection.Up, _moveMultiplier);
-        _moveDown = new MoveCommand(_rigidbody, MoveDirection.Down, _moveMultiplier);
+        _moveLeft = new MoveCommand(_rigidbody, MoveDirection.Left, _moveHorizontalMultiplier);
+        _moveRight = new MoveCommand(_rigidbody, MoveDirection.Right, _moveHorizontalMultiplier);
+        _moveUp = new MoveCommand(_rigidbody, MoveDirection.Up, _moveVerticalMultiplier);
+        _moveDown = new MoveCommand(_rigidbody, MoveDirection.Down, _moveVerticalMultiplier);
     }
 
-    public float MoveMultiplier
+    private void OnEnable()
     {
-        get { return _moveMultiplier; }
-        set
-        {
-            _moveMultiplier = value;
-            _moveLeft.SpeedMultiplier = value;
-            _moveRight.SpeedMultiplier = value;
-        }
+        InputManager.Instance.OnAttackPerformed += ShootFire;
     }
+
+    //private void OnDisable()
+    //{
+    //    InputManager.Instance.OnAttackPerformed -= ShootFire;
+    //}
+
+    //public float MoveMultiplier
+    //{
+    //    get { return _moveHorizontalMultiplier; }
+    //    set
+    //    {
+    //        _moveHorizontalMultiplier = value;
+    //        _moveLeft.SpeedMultiplier = value;
+    //        _moveRight.SpeedMultiplier = value;
+    //    }
+    //}
 
     void Update()
     {
         _inputX = InputManager.Instance.MoveValue.x;
         _inputY = InputManager.Instance.MoveValue.y;
-
-        
     }
 
     private void FixedUpdate()
@@ -74,4 +95,28 @@ public class PlayerController : MonoBehaviour
             _moveDown.Execute();
         }
     }
+
+    private void ShootFire()
+    {
+        if(_canShoot)
+        {
+            _spriteRenderer.flipX = false;
+            _spriteRenderer.sprite = _attackSprite;
+            Instantiate(_bullet, _bulletSpawnPoint);
+            _canShoot = false;
+            StartCoroutine("AttackDelay");
+        }
+    }
+
+    private IEnumerator AttackDelay()
+    {
+        yield return new WaitForSeconds(0.4f);
+        _spriteRenderer.sprite = _idleSprite;
+        yield return new WaitForSeconds(_bulletSpawnDelay);
+        _canShoot = true;
+    }
+
+
+    public Sprite HittedSprite { get => _hittedSprite; set => _hittedSprite = value; }
+    public SpriteRenderer SpriteRenderer { get => _spriteRenderer; set => _spriteRenderer = value; }
 }
