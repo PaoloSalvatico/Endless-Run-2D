@@ -6,6 +6,8 @@ public class EnemyController : MonoBehaviour
 {
     [SerializeField] private Renderer _renderer;
     [SerializeField] private Animator _animator;
+    [SerializeField] private float _enemyPoints;
+    [SerializeField] private int _enemyDamage;
 
     private Collider2D _collider;
 
@@ -22,13 +24,13 @@ public class EnemyController : MonoBehaviour
             Destroy(other.gameObject);
             _animator.SetTrigger("Hitted");
             _collider.isTrigger = false;
+            UIManager.Instance.UpdatePoints(_enemyPoints);
         }
 
         if(other.TryGetComponent(out PlayerController player))
         {
             Debug.Log("Lose");
-            player.SpriteRenderer.sprite = player.HittedSprite;
-            // open Lose panel
+            player.PlayerHitted(_enemyDamage);
         }
     }
 

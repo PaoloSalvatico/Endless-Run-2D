@@ -44,6 +44,24 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""StopMovement"",
+                    ""type"": ""Button"",
+                    ""id"": ""75d1199b-3ca6-42a7-a779-73747031d553"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Shrink"",
+                    ""type"": ""Button"",
+                    ""id"": ""000b5d43-5985-48d5-b6bb-ebc965a4ee2e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -112,6 +130,28 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                     ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""90fce5b9-53a8-423d-97ff-79669b301862"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""StopMovement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""171b66f3-9aed-4cc3-873e-c74a8eaf2119"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shrink"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -122,6 +162,8 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
+        m_Player_StopMovement = m_Player.FindAction("StopMovement", throwIfNotFound: true);
+        m_Player_Shrink = m_Player.FindAction("Shrink", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -183,12 +225,16 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Movement;
     private readonly InputAction m_Player_Attack;
+    private readonly InputAction m_Player_StopMovement;
+    private readonly InputAction m_Player_Shrink;
     public struct PlayerActions
     {
         private @GameInput m_Wrapper;
         public PlayerActions(@GameInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
+        public InputAction @StopMovement => m_Wrapper.m_Player_StopMovement;
+        public InputAction @Shrink => m_Wrapper.m_Player_Shrink;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -204,6 +250,12 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                 @Attack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
                 @Attack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
                 @Attack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
+                @StopMovement.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnStopMovement;
+                @StopMovement.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnStopMovement;
+                @StopMovement.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnStopMovement;
+                @Shrink.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShrink;
+                @Shrink.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShrink;
+                @Shrink.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShrink;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -214,6 +266,12 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                 @Attack.started += instance.OnAttack;
                 @Attack.performed += instance.OnAttack;
                 @Attack.canceled += instance.OnAttack;
+                @StopMovement.started += instance.OnStopMovement;
+                @StopMovement.performed += instance.OnStopMovement;
+                @StopMovement.canceled += instance.OnStopMovement;
+                @Shrink.started += instance.OnShrink;
+                @Shrink.performed += instance.OnShrink;
+                @Shrink.canceled += instance.OnShrink;
             }
         }
     }
@@ -222,5 +280,7 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
     {
         void OnMovement(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
+        void OnStopMovement(InputAction.CallbackContext context);
+        void OnShrink(InputAction.CallbackContext context);
     }
 }

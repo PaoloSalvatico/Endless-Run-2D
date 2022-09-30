@@ -6,6 +6,9 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
+    [Header("Player Stats")]
+    [SerializeField] protected int _lifePoints;
+
     [Header("Move Stats")]
     [SerializeField] protected float _moveHorizontalMultiplier = 1.5f;
     [SerializeField] protected float _moveVerticalMultiplier = 1.5f;
@@ -24,6 +27,8 @@ public class PlayerController : MonoBehaviour
     protected MoveCommand _moveRight;
     protected MoveCommand _moveUp;
     protected MoveCommand _moveDown;
+
+    protected StopCommand _stopMovement;
 
     protected Rigidbody2D _rigidbody;
     private SpriteRenderer _spriteRenderer;
@@ -44,11 +49,14 @@ public class PlayerController : MonoBehaviour
         _moveRight = new MoveCommand(_rigidbody, MoveDirection.Right, _moveHorizontalMultiplier);
         _moveUp = new MoveCommand(_rigidbody, MoveDirection.Up, _moveVerticalMultiplier);
         _moveDown = new MoveCommand(_rigidbody, MoveDirection.Down, _moveVerticalMultiplier);
+
+        _stopMovement = new StopCommand(_rigidbody);
     }
 
     private void OnEnable()
     {
         InputManager.Instance.OnAttackPerformed += ShootFire;
+        InputManager.Instance.OnStopPerformed += StopMovement;
     }
 
     //private void OnDisable()
@@ -101,7 +109,7 @@ public class PlayerController : MonoBehaviour
         if(_canShoot)
         {
             _spriteRenderer.flipX = false;
-            _spriteRenderer.sprite = _attackSprite;
+            SetPlayerSprite(_attackSprite);
             Instantiate(_bullet, _bulletSpawnPoint);
             _canShoot = false;
             StartCoroutine("AttackDelay");
@@ -110,13 +118,39 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator AttackDelay()
     {
-        yield return new WaitForSeconds(0.4f);
-        _spriteRenderer.sprite = _idleSprite;
+        StartCoroutine("ResetIdleSprite");
         yield return new WaitForSeconds(_bulletSpawnDelay);
         _canShoot = true;
     }
 
+    public void PlayerHitted(int damage)
+    {
+        SetPlayerSprite(_hittedSprite);
+        _lifePoints -= damage;
+        if(_lifePoints <= 0)
+        {
+            Debug.Log("Lost");
+            // TODO Add open lose panel
+            return;
+        }
+        StartCoroutine("ResetIdleSprite");
+    }
 
-    public Sprite HittedSprite { get => _hittedSprite; set => _hittedSprite = value; }
-    public SpriteRenderer SpriteRenderer { get => _spriteRenderer; set => _spriteRenderer = value; }
+    private IEnumerator ResetIdleSprite()
+    {
+        yield return new WaitForSeconds(.4f);
+        SetPlayerSprite(_idleSprite);
+    }
+
+    public void SetPlayerSprite(Sprite sprite)
+    {
+        _spriteRenderer.sprite = sprite;
+    }
+
+    private void StopMovement()
+    {
+        _stopMovement.Execute();
+    }
+
+    public int LifePoints => _lifePoints;
 }
