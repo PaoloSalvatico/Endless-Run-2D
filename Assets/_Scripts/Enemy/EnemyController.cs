@@ -15,6 +15,8 @@ public class EnemyController : MonoBehaviour
     {
         _collider = GetComponent<Collider2D>();
         _collider.isTrigger = true;
+
+        StartCoroutine("SelfDestruct");
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -29,7 +31,6 @@ public class EnemyController : MonoBehaviour
 
         if(other.TryGetComponent(out PlayerController player))
         {
-            Debug.Log("Lose");
             player.PlayerHitted(_enemyDamage);
         }
     }
@@ -37,6 +38,12 @@ public class EnemyController : MonoBehaviour
     public void DestroyEnemy()
     {
         // Add points
+        Destroy(gameObject);
+    }
+
+    private IEnumerator SelfDestruct()
+    {
+        yield return new WaitForSeconds(14);
         Destroy(gameObject);
     }
 }

@@ -30,9 +30,13 @@ public class PlayerController : MonoBehaviour
 
     protected StopCommand _stopMovement;
 
+    protected ShrinkCommand _shrinkCommand;
+
     protected Rigidbody2D _rigidbody;
     private SpriteRenderer _spriteRenderer;
     protected Animator _animator;
+
+    protected DataContainer _data;
 
     protected bool _canShoot;
 
@@ -43,6 +47,7 @@ public class PlayerController : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
         _canShoot = true;
 
         _moveLeft = new MoveCommand(_rigidbody, MoveDirection.Left, _moveHorizontalMultiplier);
@@ -51,12 +56,17 @@ public class PlayerController : MonoBehaviour
         _moveDown = new MoveCommand(_rigidbody, MoveDirection.Down, _moveVerticalMultiplier);
 
         _stopMovement = new StopCommand(_rigidbody);
+        _shrinkCommand = new ShrinkCommand(_rigidbody, _animator);
+
+        SaveManager.LoadData();
     }
 
     private void OnEnable()
     {
         InputManager.Instance.OnAttackPerformed += ShootFire;
         InputManager.Instance.OnStopPerformed += StopMovement;
+        InputManager.Instance.OnStartShrink += Shrink;
+        InputManager.Instance.OnStopShrink += StopShrink;
     }
 
     //private void OnDisable()
@@ -131,6 +141,8 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Lost");
             // TODO Add open lose panel
+            UIManager.Instance.SaveRecordPoints();
+            SaveManager.Save(_data);
             return;
         }
         StartCoroutine("ResetIdleSprite");
@@ -150,6 +162,18 @@ public class PlayerController : MonoBehaviour
     private void StopMovement()
     {
         _stopMovement.Execute();
+    }
+
+    private void Shrink()
+    {
+        _shrinkCommand.Execute();
+        _canShoot = false;
+    }
+
+    private void StopShrink()
+    {
+        _shrinkCommand.StopExecute();
+        _canShoot = true;
     }
 
     public int LifePoints => _lifePoints;

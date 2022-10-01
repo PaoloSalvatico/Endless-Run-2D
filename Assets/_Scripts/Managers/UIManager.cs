@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class UIManager : Singleton<UIManager>
 {
     [SerializeField] private TextMeshProUGUI _pointText;
+    [SerializeField] private TextMeshProUGUI _recordPointText;
     [SerializeField] private Sprite _playerHearts;
     [SerializeField] private GameObject _playerHeartContainer;
     [SerializeField] private Transform _playerHeartsPos;
@@ -14,6 +15,9 @@ public class UIManager : Singleton<UIManager>
 
     private float _addPoints;
     private float _points;
+    private int _recordPoints;
+
+    private DataContainer _data;
 
     private void Start()
     {
@@ -30,6 +34,21 @@ public class UIManager : Singleton<UIManager>
         _addPoints = points;
     }
 
+    public void SaveRecordPoints()
+    {
+        if (_recordPoints > _points) return;
+
+        _recordPoints = (int)_points;
+        _data.RecordPoints = _recordPoints;
+        SaveManager.Save(_data);
+        UpdateRecordPointText(_recordPoints);
+    }
+
+    public void UpdateRecordPointText(int points)
+    {
+        _recordPointText.text = "Record: " + _recordPoints.ToString();
+    }
+
     void Update()
     {
         _points += Time.deltaTime * 10 + _addPoints;
@@ -37,4 +56,6 @@ public class UIManager : Singleton<UIManager>
         int newPoints = (int)_points;
         _pointText.text = "Points: " + newPoints.ToString();
     }
+
+    public float Points => _points;
 }
