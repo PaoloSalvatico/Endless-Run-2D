@@ -93,6 +93,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!UIManager.Instance.IsGameGoing) return;
         if (_inputX > 0)
         {
             _moveRight.Execute();
@@ -141,6 +142,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Lost");
             // TODO Add open lose panel
+            UIManager.Instance.IsGameGoing = false;
             UIManager.Instance.SaveRecordPoints();
             SaveManager.Save(_data);
             return;

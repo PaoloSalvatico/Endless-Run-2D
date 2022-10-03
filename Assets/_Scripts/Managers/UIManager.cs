@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIManager : Singleton<UIManager>
 {
+    [Header("Score Management")]
     [SerializeField] private TextMeshProUGUI _pointText;
     [SerializeField] private TextMeshProUGUI _recordPointText;
+
+    [Header("Lose Panel")]
+    [SerializeField] private GameObject _losepanel;
+    [SerializeField] private TextMeshProUGUI _losePanelActualPoints;
+
+    [Header("Player Stats")]
     [SerializeField] private Sprite _playerHearts;
     [SerializeField] private GameObject _playerHeartContainer;
     [SerializeField] private Transform _playerHeartsPos;
@@ -16,8 +24,16 @@ public class UIManager : Singleton<UIManager>
     private float _addPoints;
     private float _points;
     private int _recordPoints;
+    private bool _isGameGoing;
 
     private DataContainer _data;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        _data = SaveManager.LoadData();
+        _isGameGoing = true;
+    }
 
     private void Start()
     {
@@ -51,6 +67,7 @@ public class UIManager : Singleton<UIManager>
 
     void Update()
     {
+        if (!_isGameGoing) return;
         _points += Time.deltaTime * 10 + _addPoints;
         if (_addPoints > 0) _addPoints = 0;
         int newPoints = (int)_points;
@@ -58,4 +75,5 @@ public class UIManager : Singleton<UIManager>
     }
 
     public float Points => _points;
+    public bool IsGameGoing { get => _isGameGoing; set => _isGameGoing = value; }
 }

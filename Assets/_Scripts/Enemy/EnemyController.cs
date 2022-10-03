@@ -8,6 +8,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private Animator _animator;
     [SerializeField] private float _enemyPoints;
     [SerializeField] private int _enemyDamage;
+    [SerializeField] private GameObject _enemyHitPlayerVFX;
 
     private Collider2D _collider;
 
@@ -32,6 +33,8 @@ public class EnemyController : MonoBehaviour
         if(other.TryGetComponent(out PlayerController player))
         {
             player.PlayerHitted(_enemyDamage);
+            //Instantiate(_enemyHitPlayerVFX, gameObject.transform.position, gameObject.transform.rotation);
+            Destroy(gameObject);
         }
     }
 

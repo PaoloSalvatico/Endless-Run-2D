@@ -17,6 +17,7 @@ public class SpawnManager : MonoBehaviour
 
     void Update()
     {
+        if (!UIManager.Instance.IsGameGoing) return;
         if(Time.time > _spawnTime)
         {
             Spawn();
