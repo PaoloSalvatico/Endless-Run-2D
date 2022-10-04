@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
     protected DataContainer _data;
 
     protected bool _canShoot;
+    protected bool _isShrinked;
 
     float _inputX = 0;
     float _inputY = 0;
@@ -115,11 +116,11 @@ public class PlayerController : MonoBehaviour
 
     private void ShootFire()
     {
-        if(_canShoot)
+        if(_canShoot && !_isShrinked)
         {
             _spriteRenderer.flipX = false;
             SetPlayerSprite(_attackSprite);
-            Instantiate(_bullet, _bulletSpawnPoint);
+            Instantiate(_bullet, _bulletSpawnPoint.position, _bulletSpawnPoint.rotation);
             _canShoot = false;
             StartCoroutine("AttackDelay");
         }
@@ -143,10 +144,15 @@ public class PlayerController : MonoBehaviour
             // TODO Add open lose panel
             UIManager.Instance.IsGameGoing = false;
             UIManager.Instance.SaveRecordPoints();
-            //SaveManager.Save(_data);
             return;
         }
         StartCoroutine("ResetIdleSprite");
+    }
+
+    public void GainLife(int life)
+    {
+        _lifePoints += life;
+        UIManager.Instance.UpdateHeartsUI();
     }
 
     private IEnumerator ResetIdleSprite()
@@ -169,12 +175,14 @@ public class PlayerController : MonoBehaviour
     {
         _shrinkCommand.Execute();
         _canShoot = false;
+        _isShrinked = true;
     }
 
     private void StopShrink()
     {
         _shrinkCommand.StopExecute();
         _canShoot = true;
+        _isShrinked = false;
     }
 
     private void DestroyHearts(int damage)
@@ -189,4 +197,6 @@ public class PlayerController : MonoBehaviour
     }
 
     public int LifePoints => _lifePoints;
+
+    public bool CanShoot { get => _canShoot; set => _canShoot = value; }
 }

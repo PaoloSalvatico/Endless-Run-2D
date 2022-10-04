@@ -10,15 +10,6 @@ public class EnemyController : AbstractSpawnableObject
     [SerializeField] private int _enemyDamage;
     [SerializeField] private GameObject _enemyHitPlayerVFX;
 
-
-    //private void Awake()
-    //{
-    //    _collider = GetComponent<Collider2D>();
-    //    _collider.isTrigger = true;
-
-    //    StartCoroutine("SelfDestruct");
-    //}
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         if(other.gameObject.CompareTag("Bullet"))
@@ -42,10 +33,4 @@ public class EnemyController : AbstractSpawnableObject
     {
         Destroy(gameObject);
     }
-
-    //private IEnumerator SelfDestruct()
-    //{
-    //    yield return new WaitForSeconds(14);
-    //    Destroy(gameObject);
-    //}
 }

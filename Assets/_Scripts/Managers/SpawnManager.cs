@@ -35,16 +35,16 @@ public class SpawnManager : MonoBehaviour
             Spawn(go);
             _enemySpawnTime = Time.time + _enemyTimeRangeBetweenSpawn;
         }
-        //if (Time.time > _enemyBossSpawnTime)
-        //{
-        //    Spawn(_enemy);
-        //    _enemyBossSpawnTime = Time.time + _enemyTimeRangeBetweenSpawn;
-        //}
-        //if (Time.time > _heartsSpawnTime)
-        //{
-        //    Spawn(_enemy);
-        //    _heartsSpawnTime = Time.time + _enemyTimeRangeBetweenSpawn;
-        //}
+        if (Time.time > _enemyBossSpawnTime)
+        {
+            Spawn(_enemyBoss);
+            _enemyBossSpawnTime = Time.time + _enemyBossTimeRangeBetweenSpawn;
+        }
+        if (Time.time > _heartsSpawnTime)
+        {
+            Spawn(_extraLife);
+            _heartsSpawnTime = Time.time + _heartTimeRangeBetweenSpawn;
+        }
     }
 
     private void Spawn(GameObject go)

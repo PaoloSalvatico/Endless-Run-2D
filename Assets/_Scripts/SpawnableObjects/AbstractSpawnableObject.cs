@@ -16,7 +16,7 @@ public abstract class AbstractSpawnableObject : MonoBehaviour
 
     private IEnumerator SelfDestruct()
     {
-        yield return new WaitForSeconds(11);
+        yield return new WaitForSeconds(13);
         Destroy(gameObject);
     }
 }

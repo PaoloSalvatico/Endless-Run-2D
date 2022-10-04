@@ -36,12 +36,7 @@ public class UIManager : Singleton<UIManager>
     {
         UpdateRecordPointText(VariableSaver.Instance.RecordPoints);
 
-        for (int i = 0; i < _player.LifePoints; i++)
-        {
-            var position = new Vector3(_playerHeartsPos.position.x + i * -50, _playerHeartsPos.position.y, 0);
-            var playerHeart = Instantiate(_playerHearts.gameObject, position, _playerHeartsPos.rotation, _playerHeartsPos);
-            _playerHeartList.Add(playerHeart);
-        }
+        UpdateHeartsUI();
     }
 
     public void UpdatePoints(float points)
@@ -62,6 +57,26 @@ public class UIManager : Singleton<UIManager>
     public void UpdateRecordPointText(int points)
     {
         _recordPointText.text = "Record: " + points.ToString();
+    }
+
+    public void UpdateHeartsUI()
+    {
+        if(_playerHeartList.Count > 0)
+        {
+            foreach (var heart in _playerHeartList)
+            {
+                Destroy(heart);
+            }
+
+            _playerHeartList.Clear();
+        }
+
+        for (int i = 0; i < _player.LifePoints; i++)
+        {
+            var position = new Vector3(_playerHeartsPos.position.x + i * -50, _playerHeartsPos.position.y, 0);
+            var playerHeart = Instantiate(_playerHearts.gameObject, position, _playerHeartsPos.rotation, _playerHeartsPos);
+            _playerHeartList.Add(playerHeart);
+        }
     }
 
     void Update()
