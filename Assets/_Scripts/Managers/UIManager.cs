@@ -36,7 +36,7 @@ public class UIManager : Singleton<UIManager>
     {
         UpdateRecordPointText(VariableSaver.Instance.RecordPoints);
 
-        for (int i = 1; i <= _player.LifePoints; i++)
+        for (int i = 0; i < _player.LifePoints; i++)
         {
             var position = new Vector3(_playerHeartsPos.position.x + i * -50, _playerHeartsPos.position.y, 0);
             var playerHeart = Instantiate(_playerHearts.gameObject, position, _playerHeartsPos.rotation, _playerHeartsPos);

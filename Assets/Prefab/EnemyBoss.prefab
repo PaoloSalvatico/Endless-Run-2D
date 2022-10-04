@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2996968056674215554}
   - component: {fileID: 2996968056674215553}
   m_Layer: 7
-  m_Name: Enemy1
+  m_Name: EnemyBoss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 2996968056674215564}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_LocalScale: {x: 12, y: 12, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -147,6 +147,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _renderer: {fileID: 2996968056674215566}
   _animator: {fileID: 2996968056674215565}
-  _enemyPoints: 200
-  _enemyDamage: 1
+  _enemyPoints: 2000
+  _enemyDamage: 3
   _enemyHitPlayerVFX: {fileID: 0}

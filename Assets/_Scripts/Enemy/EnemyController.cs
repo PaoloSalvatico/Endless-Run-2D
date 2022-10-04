@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : AbstractSpawnableObject
 {
     [SerializeField] private Renderer _renderer;
     [SerializeField] private Animator _animator;
@@ -10,15 +10,14 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private int _enemyDamage;
     [SerializeField] private GameObject _enemyHitPlayerVFX;
 
-    private Collider2D _collider;
 
-    private void Awake()
-    {
-        _collider = GetComponent<Collider2D>();
-        _collider.isTrigger = true;
+    //private void Awake()
+    //{
+    //    _collider = GetComponent<Collider2D>();
+    //    _collider.isTrigger = true;
 
-        StartCoroutine("SelfDestruct");
-    }
+    //    StartCoroutine("SelfDestruct");
+    //}
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -38,15 +37,15 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    // Called by animation event on enemy
     public void DestroyEnemy()
     {
-        // Add points
         Destroy(gameObject);
     }
 
-    private IEnumerator SelfDestruct()
-    {
-        yield return new WaitForSeconds(14);
-        Destroy(gameObject);
-    }
+    //private IEnumerator SelfDestruct()
+    //{
+    //    yield return new WaitForSeconds(14);
+    //    Destroy(gameObject);
+    //}
 }

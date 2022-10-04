@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [Header("Player Stats")]
-    [SerializeField] protected int _lifePoints;
+    [SerializeField] [Range(0, 16)] protected int _lifePoints;
 
     [Header("Move Stats")]
     [SerializeField] protected float _moveHorizontalMultiplier = 1.5f;
