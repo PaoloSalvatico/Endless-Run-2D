@@ -148,4 +148,5 @@ MonoBehaviour:
   _renderer: {fileID: 2996968056674215566}
   _animator: {fileID: 2996968056674215565}
   _enemyPoints: 200
-  _enemyDamage: 1
+  _enemyDamage: 2
+  _enemyHitPlayerVFX: {fileID: 0}

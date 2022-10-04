@@ -35,7 +35,7 @@ public static class SaveManager
         }
         else
         {
-
+            Debug.Log("Cosa devo fare??");
         }
 
         return dc;

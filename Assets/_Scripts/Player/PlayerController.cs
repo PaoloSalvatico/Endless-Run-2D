@@ -57,8 +57,6 @@ public class PlayerController : MonoBehaviour
 
         _stopMovement = new StopCommand(_rigidbody);
         _shrinkCommand = new ShrinkCommand(_rigidbody, _animator);
-
-        SaveManager.LoadData();
     }
 
     private void OnEnable()
@@ -137,14 +135,15 @@ public class PlayerController : MonoBehaviour
     public void PlayerHitted(int damage)
     {
         SetPlayerSprite(_hittedSprite);
-        _lifePoints -= damage;
+        DestroyHearts(damage);
+
         if(_lifePoints <= 0)
         {
             Debug.Log("Lost");
             // TODO Add open lose panel
             UIManager.Instance.IsGameGoing = false;
             UIManager.Instance.SaveRecordPoints();
-            SaveManager.Save(_data);
+            //SaveManager.Save(_data);
             return;
         }
         StartCoroutine("ResetIdleSprite");
@@ -176,6 +175,17 @@ public class PlayerController : MonoBehaviour
     {
         _shrinkCommand.StopExecute();
         _canShoot = true;
+    }
+
+    private void DestroyHearts(int damage)
+    {
+        for(int i = 0; i < damage; i++)
+        {
+            _lifePoints -= 1;
+            var heart = UIManager.Instance.PlayerHeartList[_lifePoints];
+            Destroy(heart);
+            if (_lifePoints <= 0) break;
+        }
     }
 
     public int LifePoints => _lifePoints;

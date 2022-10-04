@@ -16,32 +16,31 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private TextMeshProUGUI _losePanelActualPoints;
 
     [Header("Player Stats")]
-    [SerializeField] private Sprite _playerHearts;
-    [SerializeField] private GameObject _playerHeartContainer;
+    [SerializeField] private Image _playerHearts;
     [SerializeField] private Transform _playerHeartsPos;
     [SerializeField] private PlayerController _player;
 
     private float _addPoints;
     private float _points;
-    private int _recordPoints;
     private bool _isGameGoing;
-
-    private DataContainer _data;
+    private List<GameObject> _playerHeartList;
 
     protected override void Awake()
     {
         base.Awake();
-        _data = SaveManager.LoadData();
         _isGameGoing = true;
+        _playerHeartList = new List<GameObject>();
     }
 
     private void Start()
     {
-        for(int i = 0; i < _player.LifePoints; i++)
+        UpdateRecordPointText(VariableSaver.Instance.RecordPoints);
+
+        for (int i = 1; i <= _player.LifePoints; i++)
         {
-            var position = new Vector3(_playerHeartsPos.position.x + i * 3, _playerHeartsPos.position.y, 0);
-            var go = Instantiate(_playerHeartContainer, position , _playerHeartsPos.rotation);
-            //go.GetComponent<SpriteRenderer>().sprite = _playerHearts;
+            var position = new Vector3(_playerHeartsPos.position.x + i * -50, _playerHeartsPos.position.y, 0);
+            var playerHeart = Instantiate(_playerHearts.gameObject, position, _playerHeartsPos.rotation, _playerHeartsPos);
+            _playerHeartList.Add(playerHeart);
         }
     }
 
@@ -52,17 +51,17 @@ public class UIManager : Singleton<UIManager>
 
     public void SaveRecordPoints()
     {
-        if (_recordPoints > _points) return;
+        int recordPoints = VariableSaver.Instance.RecordPoints;
+        if (recordPoints > _points) return;
 
-        _recordPoints = (int)_points;
-        _data.RecordPoints = _recordPoints;
-        SaveManager.Save(_data);
-        UpdateRecordPointText(_recordPoints);
+        recordPoints = (int)_points;
+        VariableSaver.Instance.RecordPoints = recordPoints;
+        UpdateRecordPointText(recordPoints);
     }
 
     public void UpdateRecordPointText(int points)
     {
-        _recordPointText.text = "Record: " + _recordPoints.ToString();
+        _recordPointText.text = "Record: " + points.ToString();
     }
 
     void Update()
@@ -76,4 +75,5 @@ public class UIManager : Singleton<UIManager>
 
     public float Points => _points;
     public bool IsGameGoing { get => _isGameGoing; set => _isGameGoing = value; }
+    public List<GameObject> PlayerHeartList { get => _playerHeartList; set => _playerHeartList = value; }
 }
