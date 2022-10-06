@@ -11,8 +11,9 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private TextMeshProUGUI _pointText;
     [SerializeField] private TextMeshProUGUI _recordPointText;
 
-    [Header("Lose Panel")]
-    [SerializeField] private GameObject _losepanel;
+    [Header("Panel Management")]
+    [SerializeField] private GameObject _losePanel;
+    [SerializeField] private GameObject _gamePanel;
     [SerializeField] private TextMeshProUGUI _losePanelActualPoints;
 
     [Header("Player Stats")]
@@ -47,7 +48,11 @@ public class UIManager : Singleton<UIManager>
     public void SaveRecordPoints()
     {
         int recordPoints = VariableSaver.Instance.RecordPoints;
-        if (recordPoints > _points) return;
+        if (recordPoints > _points)
+        {
+            _losePanelActualPoints.text = "Points: " + _points.ToString();
+            return;
+        }
 
         recordPoints = (int)_points;
         VariableSaver.Instance.RecordPoints = recordPoints;
@@ -57,6 +62,7 @@ public class UIManager : Singleton<UIManager>
     public void UpdateRecordPointText(int points)
     {
         _recordPointText.text = "Record: " + points.ToString();
+        _losePanelActualPoints.text = "New record: " + points.ToString();
     }
 
     public void UpdateHeartsUI()
@@ -77,6 +83,22 @@ public class UIManager : Singleton<UIManager>
             var playerHeart = Instantiate(_playerHearts.gameObject, position, _playerHeartsPos.rotation, _playerHeartsPos);
             _playerHeartList.Add(playerHeart);
         }
+    }
+
+    public void OpenLosePanel()
+    {
+        _losePanel.SetActive(true);
+        _gamePanel.SetActive(false);
+    }
+
+    public void RetryDragonScene()
+    {
+        ResetRun(CostantVariables.DRAGON_ENDLESS_RUN_SCENE);
+    }
+
+    private void ResetRun(string name)
+    {
+        SceneManager.LoadScene(name);
     }
 
     void Update()

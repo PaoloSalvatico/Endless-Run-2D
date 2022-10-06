@@ -68,10 +68,13 @@ public class PlayerController : MonoBehaviour
         InputManager.Instance.OnStopShrink += StopShrink;
     }
 
-    //private void OnDisable()
-    //{
-    //    InputManager.Instance.OnAttackPerformed -= ShootFire;
-    //}
+    private void OnDisable()
+    {
+        InputManager.Instance.OnAttackPerformed -= ShootFire;
+        InputManager.Instance.OnStopPerformed -= StopMovement;
+        InputManager.Instance.OnStartShrink -= Shrink;
+        InputManager.Instance.OnStopShrink -= StopShrink;
+    }
 
     //public float MoveMultiplier
     //{
@@ -140,10 +143,10 @@ public class PlayerController : MonoBehaviour
 
         if(_lifePoints <= 0)
         {
-            Debug.Log("Lost");
             // TODO Add open lose panel
             UIManager.Instance.IsGameGoing = false;
             UIManager.Instance.SaveRecordPoints();
+            UIManager.Instance.OpenLosePanel();
             return;
         }
         StartCoroutine("ResetIdleSprite");
