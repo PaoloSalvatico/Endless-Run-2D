@@ -147,6 +147,7 @@ public class PlayerController : MonoBehaviour
             UIManager.Instance.IsGameGoing = false;
             UIManager.Instance.SaveRecordPoints();
             UIManager.Instance.OpenLosePanel();
+            Destroy(gameObject);
             return;
         }
         StartCoroutine("ResetIdleSprite");
