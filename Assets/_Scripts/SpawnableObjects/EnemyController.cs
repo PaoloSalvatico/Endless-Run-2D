@@ -15,9 +15,7 @@ public class EnemyController : AbstractSpawnableObject
         if(other.gameObject.CompareTag("Bullet"))
         {
             Destroy(other.gameObject);
-            _animator.SetTrigger("Hitted");
-            _collider.isTrigger = false;
-            UIManager.Instance.UpdatePoints(_enemyPoints);
+            EnemyHitted();
         }
 
         if(other.TryGetComponent(out PlayerController player))
@@ -26,6 +24,13 @@ public class EnemyController : AbstractSpawnableObject
             //Instantiate(_enemyHitPlayerVFX, gameObject.transform.position, gameObject.transform.rotation);
             Destroy(gameObject);
         }
+    }
+
+    public void EnemyHitted()
+    {
+        _animator.SetTrigger("Hitted");
+        _collider.isTrigger = false;
+        UIManager.Instance.UpdatePoints(_enemyPoints);
     }
 
     // Called by animation event on enemy

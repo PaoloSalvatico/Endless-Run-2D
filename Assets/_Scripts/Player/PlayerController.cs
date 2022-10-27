@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnDisable()
     {
-        InputManager.Instance.OnAttackPerformed -= ShootFire;
+        //InputManager.Instance.OnAttackPerformed -= ShootFire;
         InputManager.Instance.OnStopPerformed -= StopMovement;
         InputManager.Instance.OnStartShrink -= Shrink;
         InputManager.Instance.OnStopShrink -= StopShrink;

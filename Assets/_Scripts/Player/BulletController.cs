@@ -21,4 +21,12 @@ public class BulletController : MonoBehaviour
         yield return new WaitForSeconds(5);
         Destroy(gameObject);
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Obstacle") || collision.CompareTag("Bullet"))
+        {
+            Destroy(gameObject);
+        }
+    }
 }
