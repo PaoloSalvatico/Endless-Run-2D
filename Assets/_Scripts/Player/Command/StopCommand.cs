@@ -8,7 +8,7 @@ public class StopCommand : AbstractPlayerCommand
     {
 
     }
-    public override void Execute()
+    public override void Execute(PlayerController player)
     {
         _rigidbody.velocity = Vector2.zero;
     }

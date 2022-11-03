@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour
 
     protected ShrinkCommand _shrinkCommand;
 
+    protected AttackCommand _attackCommand;
+
     protected Rigidbody2D _rigidbody;
     private SpriteRenderer _spriteRenderer;
     protected Animator _animator;
@@ -58,6 +60,7 @@ public class PlayerController : MonoBehaviour
 
         _stopMovement = new StopCommand(_rigidbody);
         _shrinkCommand = new ShrinkCommand(_rigidbody, _animator);
+        _attackCommand = new AttackCommand(_rigidbody);
     }
 
     private void OnEnable()
@@ -98,26 +101,31 @@ public class PlayerController : MonoBehaviour
         if (!UIManager.Instance.IsGameGoing) return;
         if (_inputX > 0)
         {
-            _moveRight.Execute();
+            _moveRight.Execute(this);
             _spriteRenderer.flipX = false;
         }
         else if (_inputX < 0)
         {
-            _moveLeft.Execute();
+            _moveLeft.Execute(this);
             _spriteRenderer.flipX = true;
         }
 
         if (_inputY > 0)
         {
-            _moveUp.Execute();
+            _moveUp.Execute(this);
         }
         else if (_inputY < 0)
         {
-            _moveDown.Execute();
+            _moveDown.Execute(this);
         }
     }
 
-    private void ShootFire()
+    private void DefaultShootCommand()
+    {
+        _attackCommand.Execute(this);
+    }
+
+    public void ShootFire()
     {
         if(_canShoot && !_isShrinked)
         {
@@ -172,12 +180,12 @@ public class PlayerController : MonoBehaviour
 
     private void StopMovement()
     {
-        _stopMovement.Execute();
+        _stopMovement.Execute(this);
     }
 
     private void Shrink()
     {
-        _shrinkCommand.Execute();
+        _shrinkCommand.Execute(this);
         _canShoot = false;
         _isShrinked = true;
     }

@@ -11,7 +11,7 @@ public class ShrinkCommand : AbstractPlayerCommand
         _animator = animator;
     }
 
-    public override void Execute()
+    public override void Execute(PlayerController player)
     {
         _animator.SetBool("IsShrinking", true);
     }

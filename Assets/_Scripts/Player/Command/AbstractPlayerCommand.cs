@@ -11,5 +11,5 @@ public abstract class AbstractPlayerCommand
         _rigidbody = rigidbody;
     }
 
-    public abstract void Execute();
+    public abstract void Execute(PlayerController player);
 }

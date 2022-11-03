@@ -6,13 +6,16 @@ public class AttackCommand : AbstractPlayerCommand
 {
     [SerializeField] private float _speedMultiplier;
 
-    public override void Execute()
+    private PlayerController _player;
+
+    public override void Execute(PlayerController player)
     {
-        
+        player.ShootFire();
     }
 
-    public AttackCommand(Rigidbody2D rigidbody, float speedMult) : base(rigidbody)
+    public AttackCommand(Rigidbody2D rigidbody) : base(rigidbody)
     {
-        speedMult = _speedMultiplier;
+        //_player = player;
+        //speedMult = _speedMultiplier;
     }
 }

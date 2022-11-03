@@ -13,7 +13,7 @@ public class MoveCommand : AbstractPlayerCommand
         _speedMultiplier = speedMult;
     }
 
-    public override void Execute()
+    public override void Execute(PlayerController player)
     {
         var dir = 1f;
 
