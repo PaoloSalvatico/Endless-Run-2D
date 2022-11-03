@@ -53,19 +53,19 @@ public class PlayerController : MonoBehaviour
         _animator = GetComponent<Animator>();
         _canShoot = true;
 
-        _moveLeft = new MoveCommand(_rigidbody, MoveDirection.Left, _moveHorizontalMultiplier);
-        _moveRight = new MoveCommand(_rigidbody, MoveDirection.Right, _moveHorizontalMultiplier);
-        _moveUp = new MoveCommand(_rigidbody, MoveDirection.Up, _moveVerticalMultiplier);
-        _moveDown = new MoveCommand(_rigidbody, MoveDirection.Down, _moveVerticalMultiplier);
+        _moveLeft = new MoveCommand(MoveDirection.Left, _moveHorizontalMultiplier);
+        _moveRight = new MoveCommand(MoveDirection.Right, _moveHorizontalMultiplier);
+        _moveUp = new MoveCommand(MoveDirection.Up, _moveVerticalMultiplier);
+        _moveDown = new MoveCommand(MoveDirection.Down, _moveVerticalMultiplier);
 
-        _stopMovement = new StopCommand(_rigidbody);
-        _shrinkCommand = new ShrinkCommand(_rigidbody, _animator);
-        _attackCommand = new AttackCommand(_rigidbody);
+        _stopMovement = new StopCommand();
+        _shrinkCommand = new ShrinkCommand();
+        _attackCommand = new AttackCommand();
     }
 
     private void OnEnable()
     {
-        InputManager.Instance.OnAttackPerformed += ShootFire;
+        InputManager.Instance.OnAttackPerformed += DefaultShootCommand;
         InputManager.Instance.OnStopPerformed += StopMovement;
         InputManager.Instance.OnStartShrink += Shrink;
         InputManager.Instance.OnStopShrink += StopShrink;
@@ -92,6 +92,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (this.gameObject == null) return;
         _inputX = InputManager.Instance.MoveValue.x;
         _inputY = InputManager.Instance.MoveValue.y;
     }
@@ -192,7 +193,7 @@ public class PlayerController : MonoBehaviour
 
     private void StopShrink()
     {
-        _shrinkCommand.StopExecute();
+        _shrinkCommand.StopExecute(this);
         _canShoot = true;
         _isShrinked = false;
     }

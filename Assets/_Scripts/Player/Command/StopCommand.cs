@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class StopCommand : AbstractPlayerCommand
 {
-    public StopCommand(Rigidbody2D rigidbody) : base(rigidbody)
-    {
+    //public StopCommand(Rigidbody2D rigidbody)
+    //{
 
-    }
+    //}
     public override void Execute(PlayerController player)
     {
-        _rigidbody.velocity = Vector2.zero;
+        player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     }
 }

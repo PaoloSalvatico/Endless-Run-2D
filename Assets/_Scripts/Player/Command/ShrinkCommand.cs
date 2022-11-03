@@ -4,20 +4,22 @@ using UnityEngine;
 
 public class ShrinkCommand : AbstractPlayerCommand
 {
-    protected Animator _animator;
+    private Animator _animator;
 
-    public ShrinkCommand (Rigidbody2D rigidbody, Animator animator) : base(rigidbody)
-    {
-        _animator = animator;
-    }
+    //public ShrinkCommand (Animator animator)
+    //{
+    //    _animator = animator;
+    //}
 
     public override void Execute(PlayerController player)
     {
+        _animator = player.GetComponent<Animator>();
         _animator.SetBool("IsShrinking", true);
     }
 
-    public void StopExecute()
+    public void StopExecute(PlayerController player)
     {
+        _animator = player.GetComponent<Animator>();
         _animator.SetBool("IsShrinking", false);
     }
 }

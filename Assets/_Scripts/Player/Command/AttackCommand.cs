@@ -13,9 +13,9 @@ public class AttackCommand : AbstractPlayerCommand
         player.ShootFire();
     }
 
-    public AttackCommand(Rigidbody2D rigidbody) : base(rigidbody)
-    {
-        //_player = player;
-        //speedMult = _speedMultiplier;
-    }
+    //public AttackCommand()
+    //{
+    //    //_player = player;
+    //    //speedMult = _speedMultiplier;
+    //}
 }
